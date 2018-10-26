@@ -1,0 +1,19 @@
+%% retinex测试函数
+clc,close all,clear all;
+ImgOriginal=imread('../image/7.jpg');  
+[m,n,z] = size(ImgOriginal);  
+ImgOut = zeros(m,n,z);  
+nIterations=10;
+for i = 1:z  
+    ImChannel = log(double(ImgOriginal(:,:,i))+eps);  
+    ImgOut(:,:,i)=retinex_frankle_mccann(ImChannel,nIterations);   
+    ImgOut(:,:,i)=exp(ImgOut(:,:,i));  
+    a=min(min(ImgOut(:,:,i)));  
+    b=max(max(ImgOut(:,:,i)));  
+    ImgOut(:,:,i)=((ImgOut(:,:,i)-a)/(b-a))*255;       
+end  
+ImgOut=uint8(ImgOut);  
+figure(1);  
+imshow(ImgOriginal);  
+figure(2);  
+imshow(ImgOut);  
