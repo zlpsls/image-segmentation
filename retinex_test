@@ -1,6 +1,4 @@
-%% retinex测试函数
-clc,close all,clear all;
-ImgOriginal=imread('../image/7.jpg');  
+ImgOriginal=imread('D:\IMAGES/crazing_1.jpg');  
 [m,n,z] = size(ImgOriginal);  
 ImgOut = zeros(m,n,z);  
 nIterations=10;
@@ -16,4 +14,7 @@ ImgOut=uint8(ImgOut);
 figure(1);  
 imshow(ImgOriginal);  
 figure(2);  
-imshow(ImgOut);  
+imshow(ImgOut,'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+saveas(gca,'meanshape3.jpg','jpg');
