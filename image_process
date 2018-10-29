@@ -1,0 +1,28 @@
+srcDir=uigetdir('Choose source directory.'); %获得选择的文件夹
+cd(srcDir);
+allnames=struct2cell(dir('*.jpg')); %只处理8位的bmp文件
+[k,len]=size(allnames); %获得bmp文件的个数
+for ii=1:len
+%逐次取出文件
+name=allnames{1,ii};
+I=imread(name); %读取文件
+%然后在此处添加你的图像处理程序即可
+ImgOriginal=I 
+[m,n,z] = size(ImgOriginal);  
+ImgOut = zeros(m,n,z);  
+nIterations=10;
+for i = 1:z  
+    ImChannel = log(double(ImgOriginal(:,:,i))+eps);  
+    ImgOut(:,:,i)=retinex_frankle_mccann(ImChannel,nIterations);   
+    ImgOut(:,:,i)=exp(ImgOut(:,:,i));  
+    a=min(min(ImgOut(:,:,i)));  
+    b=max(max(ImgOut(:,:,i)));  
+    ImgOut(:,:,i)=((ImgOut(:,:,i)-a)/(b-a))*255;       
+end  
+ImgOut=uint8(ImgOut);  
+imshow(ImgOut,'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+newFileName=['agmented',num2str(ii),'.jpg']
+saveas(gca,newFileName,'jpg');
+end
