@@ -1,0 +1,56 @@
+%清理工作空间
+clear;
+clc;
+%加载数据
+load imgdata *;
+%数据组合
+RS_img_re=reshape(RS_img,40000,300);
+Pa_img_re=reshape(Pa_img,40000,300); 
+Cr_img_re=reshape(Cr_img,40000,300); 
+PS_img_re=reshape(PS_img,40000,300); In_img_re=reshape(In_img,40000,300);
+Sc_img_re=reshape(Sc_img,40000,300); 
+img_data=[RS_img_re	Pa_img_re Cr_img_re	PS_img_re In_img_re Sc_img_re]; 
+img_data_all=uint8(reshape(img_data,200,200,1800));
+%对图像进行增强滤波
+imgdata_area=zeros(200,200,1800);% 领域滤波结果
+imgdata_med=zeros(200,200,1800);%中值滤波结果
+imgdata_gauss=zeros(200,200,1800);% 中值滤波结果
+imgdata_wien=zeros(200,200,1800);% 中值滤波结果
+for i=1:1800 
+	img=img_data_all(:,:,i);
+%领域滤波
+	h=ones(5,5)/25;
+	img_area=imfilter(img,h,'replicate');
+	imgdata_area(:,:,i)=uint8(img_area);
+%中值滤波
+	img_med=medfilt2(img,[5 5]); 
+	imgdata_med(:,:,i)=uint8(img_med);
+%高斯滤波
+	sigma=1.6;%标准差大小
+
+	window=double(uint8(3*sigma)*2+1);%窗 口 大 小 一 半 为 3*sigma 
+	H=fspecial('gaussian',	window,sigma);
+%fspecial('gaussian', hsize, sigma)产生滤波模板
+% 为了不出现黑边， 使用参数'replicate'（输入图像的外部边界通过复制内部边界的值来扩展）
+	img_gauss=imfilter(img,H,'replicate');
+
+	imgdata_gauss(:,:,i)=uint8(img_gauss);
+%维纳滤波
+	img_wien=wiener2(img,[5 5]); %对加噪图像进行二维自适应维纳滤波
+	imgdata_wien(:,:,i)=uint8(img_wien); 
+end
+%计算 PSNR，对四种滤波方法的结
+psnr_area=PSNR( img_data_all,imgdata_area,[1 301 601 901 1201 1501]);
+%中值滤波的PSNR 值
+psnr_med=PSNR( img_data_all,imgdata_med,[1 301 601 901 1201 1501]);
+%高斯滤波的PSNR 值
+psnr_gauss=PSNR( img_data_all,imgdata_gauss,[1 301 601 901 1201 1501]);
+%维纳滤波的PSNR 值
+psnr_wiem=PSNR( img_data_all,imgdata_wien,[1 301 601 901 1201 1501]);
+cell_psnr{1,1}=psnr_area;
+cell_psnr{2,1}=psnr_med;
+cell_psnr{3,1}=psnr_gauss;
+cell_psnr{4,1}=psnr_wiem;
+save('imgdata_filter.mat','imgdata_area' ,'imgdata_med','imgdata_gauss','imgdata_wien','cell_psnr');
+%清理内存
+Clear;
