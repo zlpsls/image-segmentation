@@ -1,4 +1,4 @@
-img = imread('D:\IMAGES\rolled-in_scale_91.jpg');%Provide input image path
+ img = imread('D:\IMAGES\meanshape578.jpg');%Provide input image path
 gfrgb = imfilter(img, fspecial('gaussian', 3, 3), 'symmetric', 'conv');
 %symmetric图像大小通过镜像反射其边界来扩展 conv通过使用卷积来完成
 %fspecial('gaussian', 3, 3)产生3*3高斯低通滤波器模板
@@ -20,6 +20,10 @@ b = double(lab(:,:,3)); bm = mean(mean(b));
 % Finally compute the saliency map and display it.
 %---------------------------------------------------------
 sm = (l-lm).^2 + (a-am).^2 + (b-bm).^2;
-mat2jpg(sm,'D:\','b')
+%mat2jpg(sm,'D:\','c')
 %subplot(6,1,1)
-imshow(sm,[]);
+sm1 = imshow(sm,[]);
+imshow(sm,[], 'border','tight','initialmagnification','fit');
+set(gcf,'Position',[0,0,129,129]);
+axis normal;
+saveas(gca,'salientMap.jpg','jpg');
