@@ -1,0 +1,25 @@
+img = imread('D:\IMAGES\rolled-in_scale_91.jpg');%Provide input image path
+gfrgb = imfilter(img, fspecial('gaussian', 3, 3), 'symmetric', 'conv');
+%symmetric图像大小通过镜像反射其边界来扩展 conv通过使用卷积来完成
+%fspecial('gaussian', 3, 3)产生3*3高斯低通滤波器模板
+%---------------------------------------------------------
+% Perform sRGB to CIE Lab color space conversion (using D65)
+%---------------------------------------------------------
+%cform = makecform('srgb2lab', 'whitepoint', whitepoint('d65'));
+cform = makecform('srgb2lab', 'AdaptedWhitePoint', whitepoint('d65'));
+lab = applycform(gfrgb,cform);
+%---------------------------------------------------------
+% Compute Lab average values (note that in the paper this
+% average is found from the unblurred original image, but
+% the results are quite similar)
+%---------------------------------------------------------
+l = double(lab(:,:,1)); lm = mean(mean(l));
+a = double(lab(:,:,2)); am = mean(mean(a));
+b = double(lab(:,:,3)); bm = mean(mean(b));
+%---------------------------------------------------------
+% Finally compute the saliency map and display it.
+%---------------------------------------------------------
+sm = (l-lm).^2 + (a-am).^2 + (b-bm).^2;
+mat2jpg(sm,'D:\','b')
+%subplot(6,1,1)
+imshow(sm,[]);
