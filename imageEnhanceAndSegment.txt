@@ -1,0 +1,29 @@
+%清理工作空间clear;
+clc;
+%加载数据
+load imgdata_filter imgdata_wien; 
+imgdata=uint8(imgdata_wien);
+%直方图均衡化
+img_wien_hist=zeros(200,200,1800); 
+for i=1:1800
+	img=imgdata(:,:,i); 
+	img_wien_hist(:,:,i)=uint8(histeq(img)); 
+end
+%保存数据
+save('imgdata_strong.mat','img_wien_hist');
+% 提 取 ROI 
+img_wien_hist_roi=zeros(200,200,1800); 
+img_wien_hist_roibw=zeros(200,200,1800);
+for i=1:1800 
+	img=img_wien_hist(:,:,i); 
+	I=uint8(img); 
+	I1=im2bw(I);
+	H=fspecial('sobel');	%选择 sobel 算子
+	J=filter2(H,I1);	%卷积运算
+	Js=im2bw(J); 
+	J2=im2bw(J).*double(I);
+	img_wien_hist_roi(:,:,i)=uint8(J2); 
+	img_wien_hist_roibw(:,:,i)=Js;
+end
+%保存数据
+save('imgdata_seg.mat','img_wien_hist_roi','img_wien_hist_roibw');
