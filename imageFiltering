@@ -53,4 +53,4 @@ cell_psnr{3,1}=psnr_gauss;
 cell_psnr{4,1}=psnr_wiem;
 save('imgdata_filter.mat','imgdata_area' ,'imgdata_med','imgdata_gauss','imgdata_wien','cell_psnr');
 %清理内存
-Clear;
+clear;
