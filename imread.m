@@ -28,3 +28,5 @@ In_img=reshape(ALL_IMG(:,:,:,5),200,200,300);
 Sc_img=reshape(ALL_IMG(:,:,:,6),200,200,300);
 %保存读取的数据
 save('imgdata.mat','RS_img','Pa_img','Cr_img','PS_img','In_img','Sc_img');
+I =Pa_img(:,:,1)
+imshow(I/256); %像素值映射到0~1
