@@ -54,3 +54,12 @@ cell_psnr{4,1}=psnr_wiem;
 save('imgdata_filter.mat','imgdata_area' ,'imgdata_med','imgdata_gauss','imgdata_wien','cell_psnr');
 %清理内存
 clear;
+%展示滤波效果，当矩阵取值为0~255，如果矩阵为uint8类型，直接使用imshow，如果矩阵为double类型，需要先除以256再使用imshow
+for i = 1:12
+    subplot(2,6,i);
+	if i <= 6
+		imshow(img_data_all(:,:,(300*(i-1)+5)));
+	else
+		imshow(imgdata_area(:,:,(300*(i-7)+5))/256);
+	end
+end
