@@ -1,0 +1,18 @@
+load imgdata_strong;
+num=10; time=zeros(6,1);
+
+for i=1:6
+	t0=clock; 
+	%for j=1:num
+	img=img_wien_hist(:,:,(300*(i-1)+5)); 
+		I=uint8(img);
+		I1=im2bw(I);
+		%I2=edge(I1,'Roberts');
+		I2=edge(I1,'Sobel'); 
+		%I2=edge(I1,'Prewitt');
+		%I2=edge(I1,'Canny');
+		%I2=edge(I1,'Log'); 
+	%end
+	t1=clock; 
+	time(i)=t1(6)-t0(6);
+end
