@@ -1,0 +1,56 @@
+srcImage = imread('scratches_64.jpg'); 
+whos, 
+ 
+% 显示原始图像
+figure('name', '前期处理');
+subplot(221), imshow(srcImage), title('原始图像'); 
+ 
+% 采用otsu方法获取二值化阈值，进行二值化并进行显示
+threshold = graythresh(srcImage); 
+bwImage = im2bw(srcImage, threshold); 
+subplot(222), imshow(bwImage), title('二值图像');
+ 
+% 运用开操作消去噪点
+% 开操作可以平滑物体轮廓，断开狭窄的间断，消除细小的突出物
+se = strel('disk', 2); % 创建一个半径为2的圆形结构元
+open_bwImage = imopen(bwImage, se); % 开操作是先腐蚀再膨胀
+subplot(223), imshow(open_bwImage), title('开操作图像'); 
+ 
+% 获取连通区域，并进行显示
+L = bwlabel(open_bwImage, 4); % 二维二进制图像中的连通域标记。n=4,说明按照4连通域寻找目标
+RGB = label2rgb(L, 'spring', 'c', 'shuffle'); % 将标记矩阵转换为RGB图像
+subplot(224), imshow(RGB), title('彩色图'); 
+ 
+% 仅保留最大的连通域，并显示
+stats = regionprops(open_bwImage,'basic'); % 获取图像的Area, Centroid, BoundingBox
+Ar = cat(1, stats.Area); % 沿垂直方向串联数组
+ind = find(Ar == max(Ar)); 
+open_bwImage = ismember(L, ind); % 此时的open_bwImage仅保留了最大连通域
+figure('name', '标记提取'); 
+subplot(221), imshow(open_bwImage), title('仅保留最大连通域'); 
+ 
+stats = regionprops(open_bwImage,'basic'); % 重新获取属性
+% 此时，stats是一个1*1结构体
+% stats.Area  327209
+% stats.Centroid  [7.001908749453713e+02, 3.849913480374929e+02]
+% stats.BoundingBox  [3.565000000000000e+02, 58.500000000000000, 664, 662]
+ 
+% 绘制最大连通域的质心
+subplot(222), imshow(open_bwImage), title('质心'); 
+hold on;
+ 
+% 标出质心
+plot(stats.Centroid(:, 1), stats.Centroid(:, 2), 'r*'); 
+ 
+% 绘制感兴趣区域ROI
+rectangle('position', [stats.BoundingBox], ...
+           'LineWidth', 2, 'LineStyle', '-', 'EdgeColor', 'r');
+hold off; 
+       
+% 对原始图像提取
+crop_srcImage = imcrop(srcImage, [stats.BoundingBox]);
+subplot(223), imshow(crop_srcImage), title('提取之后的原始图像'); 
+ 
+% 对二值图像的提取
+crop_open_bwImage = imcrop(open_bwImage, [stats.BoundingBox]); 
+subplot(224), imshow(crop_open_bwImage), title('提取之后的二值图像');
