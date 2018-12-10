@@ -1,5 +1,5 @@
 %函数histeq（）进行直方图均衡化处理
-I=imread('tire.tif');
+I=img_data_all(:,:,1501);
 J=histeq(I);  %直方图均衡化
 figure,
 subplot(121),imshow(uint8(I));
