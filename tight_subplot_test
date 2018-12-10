@@ -1,0 +1,23 @@
+ha = tight_subplot(3,2,[.01 .03],[.1 .01],[.01 .01])
+for ii = 1:6; 
+    axes(ha(ii)); 
+    plot(randn(10,ii)); 
+end
+set(ha(1:4),'XTickLabel',''); 
+set(ha,'YTickLabel','')
+
+hs = tight_subplot(1, 6, [0.01, 0.01], [0.001, 0.001], [0.01, 0.01]);
+for i = 1:6,
+    axes(hs(i));
+    imshow(imgdata_wien(:,:,(300*(i-1)+5))/256);
+end;
+
+hs = tight_subplot(2, 6, [0.01, 0.01], [0.01, 0.01], [0.01, 0.01]);
+for i = 1:6,
+    axes(hs(i));
+    imshow(img_data_all(:,:,(300*(i-1)+5)));
+end
+for i = 7:12,
+    axes(hs(i));
+    imshow(imgdata_area(:,:,(300*(i-7)+5))/256);
+end
