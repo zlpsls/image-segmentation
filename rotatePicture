@@ -1,0 +1,24 @@
+I=img_data_all(:,:,1250); %读入图片
+I1=rot90(I,1);%逆时针转90度
+I2=rot90(I,2);%逆时针转180度
+I3=rot90(I,3);%逆时针转270度
+figure,
+imshow(I,'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+newFileName=['agmented',num2str(9),'.jpg']
+saveas(gca,newFileName,'jpg');;
+figure,imshow(I1,'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+newFileName=['agmented',num2str(10),'.jpg']
+saveas(gca,newFileName,'jpg');;
+figure,imshow(I2,'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+newFileName=['agmented',num2str(11),'.jpg']
+saveas(gca,newFileName,'jpg');figure,imshow(I3,'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+newFileName=['agmented',num2str(12),'.jpg']
+saveas(gca,newFileName,'jpg');
