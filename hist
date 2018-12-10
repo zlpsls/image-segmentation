@@ -1,13 +1,17 @@
-%函数histeq（）进行直方图均衡化处理
-I=img_data_all(:,:,1501);
+I=img_data_all(:,:,1550);
 J=histeq(I);  %直方图均衡化
-figure,
-subplot(121),imshow(uint8(I));
+figure,imshow(uint8(I),'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+newFileName=['agmented',num2str(7),'.jpg']
+saveas(gca,newFileName,'jpg');
 title('原图')
-subplot(122),imshow(uint8(J));
+figure,imshow(uint8(J),'border','tight','initialmagnification','fit');
+set (gcf,'Position',[0,0,129,129]);
+axis normal;
+newFileName=['agmented',num2str(8),'.jpg']
+saveas(gca,newFileName,'jpg');
 title('均衡化后')
 figure,
-subplot(121),imhist(I,64);
-title('原图像直方图');
-subplot(122),imhist(J,64);
-title('均衡化后的直方图');
+imhist(I,64);
+figure,imhist(J,64);
