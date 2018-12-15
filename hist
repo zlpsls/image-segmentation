@@ -1,4 +1,4 @@
-I=img_data_all(:,:,1550);
+I=img_data_all(:,:,1250);
 J=histeq(I);  %直方图均衡化
 figure,imshow(uint8(I),'border','tight','initialmagnification','fit');
 set (gcf,'Position',[0,0,129,129]);
